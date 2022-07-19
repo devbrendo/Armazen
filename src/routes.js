@@ -7,9 +7,9 @@ const router = Router();
 
 router.get('/', IndexController.inicio);
 router.get('/frutas', FrutaController.index);
-router.get('/frutas/show', FrutaController.show);
+router.get('/frutas/:id', FrutaController.show);
 router.get('/frutas/store', FrutaController.store);
 router.get('/frutas/update', FrutaController.update);
-router.get('/frutas/delete', FrutaController.delete);
+router.delete('/frutas/:id', FrutaController.delete);
 
 module.exports = router;

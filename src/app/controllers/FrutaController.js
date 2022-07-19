@@ -1,25 +1,50 @@
 const { response } = require("express");
+const FrutasRepository = require('../repositories/FrutasRepository');
 
 class FrutaController {
-  index(request, response){
+  async index(request, response) {
     //listagem dos registros
-    response.send('Lista de registros');
-  }
-  show(request, response){
+    const frutas = await FrutasRepository.findAll();
+
+    response.json(frutas);
+  };
+
+  async show(request, response) {
     //obter um registro
-    response.send('Retorno de um registro')
+    const { id } = request.params;
+    const frutas = await FrutasRepository.findById(id);
+
+    if (!frutas) {
+      //404 not found
+      return response.status(404).json({ error: 'User not found' })
+    }
+    response.json(frutas)
   }
-  store(resquest, response){
+
+  store(resquest, response) {
     //criar um registro
     response.send('Criação de um registro')
   }
-  update(resquest, response){
+
+  update(resquest, response) {
     //editar um registro
     response.send('Edição de registro')
   }
-  delete(request, response){
+
+  async delete(request, response) {
     //deletar um registro
-    response.send('Exclusão de registro')
+    const { id } = request.params;
+
+    const frutas = await FrutasRepository.findById(id);
+
+    if(!frutas) {
+      return response.status(404).json({error: 'User not found'});
+    }
+
+    await FrutasRepository.delete(id);
+    //204: No content
+    response.sendStatus(204);
+    
   }
 }
 
