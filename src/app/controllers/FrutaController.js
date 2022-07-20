@@ -1,4 +1,5 @@
 const { response } = require("express");
+const { findByNome } = require("../repositories/FrutasRepository");
 const FrutasRepository = require('../repositories/FrutasRepository');
 
 class FrutaController {
@@ -17,18 +18,59 @@ class FrutaController {
     if (!frutas) {
       //404 not found
       return response.status(404).json({ error: 'User not found' })
-    }
+    };
     response.json(frutas)
   }
 
-  store(resquest, response) {
+  async store(request, response) {
     //criar um registro
-    response.send('Criação de um registro')
-  }
+    const {
+      nome, peso_id
+    } = request.body;
 
-  update(resquest, response) {
+    if(!nome){
+      return response.status(400).json({ error: 'Nome obrigatorio '});
+    };
+
+    const FrutasExists = await FrutasRepository.findByNome(nome);
+
+    if ( FrutasExists){
+      return response.status(400).json({ error: 'A fruta ja existe '});
+    };
+
+    const frutas = await FrutasRepository.create({
+      nome,
+      peso_id,
+    });
+    response.json(frutas);
+  } 
+
+  async update(request, response) {
     //editar um registro
-    response.send('Edição de registro')
+    const {id} = request.params;
+    const {
+      nome, peso_id
+    } = request.body;
+
+    const frutaExists = await FrutasRepository.findById(id);
+    if (!frutaExists) {
+      return response.status(404).json({error: 'Fruta não existe'});
+    }
+
+    if(!nome){
+      return response.status(400).json({ error: 'Nome obrigatorio '});
+    };
+
+    const frutaByNome = await FrutasRepository.findByNome(nome);
+    if( frutaByNome && frutaByNome.id !== id) {
+      return response.status(400).json({error: "nome em uso"})
+    }
+
+    const fruta = await FrutasRepository.update(id, {
+      nome, peso_id
+    });
+
+    response.json(fruta);
   }
 
   async delete(request, response) {
@@ -39,7 +81,7 @@ class FrutaController {
 
     if(!frutas) {
       return response.status(404).json({error: 'User not found'});
-    }
+    };
 
     await FrutasRepository.delete(id);
     //204: No content
