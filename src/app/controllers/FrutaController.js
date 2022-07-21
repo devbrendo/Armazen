@@ -25,7 +25,7 @@ class FrutaController {
   async store(request, response) {
     //criar um registro
     const {
-      nome, peso_id
+      nome
     } = request.body;
 
     if(!nome){
@@ -40,7 +40,6 @@ class FrutaController {
 
     const frutas = await FrutasRepository.create({
       nome,
-      peso_id,
     });
     response.json(frutas);
   } 
@@ -49,7 +48,7 @@ class FrutaController {
     //editar um registro
     const {id} = request.params;
     const {
-      nome, peso_id
+      nome
     } = request.body;
 
     const frutaExists = await FrutasRepository.findById(id);

@@ -3,12 +3,12 @@ let frutas = [
   {
     id: v4(),
     nome: 'morango',
-    peso_id: "5",
+
   },
   {
     id: v4(),
     nome: 'manga',
-    peso_id: "5",
+
   }
 ]
 
@@ -38,13 +38,12 @@ class FrutasRepository {
   }
 
   create({
-    nome, peso_id
+    nome
   }) {
     return new Promise((resolve) => {
       const newFruta = {
         id: v4(),
         nome,
-        peso_id:v4(),
       };
       frutas.push(newFruta);
       resolve(newFruta);
@@ -52,13 +51,13 @@ class FrutasRepository {
   }
 
   update(id, {
-    nome, peso_id
+    nome
   }) {
     return new Promise((resolve) => {
       const updatedFruta = {
         id,
         nome,
-        peso_id,
+
       };
       frutas = frutas.map((frutas) => (
         frutas.id === id ? updatedFruta : frutas
